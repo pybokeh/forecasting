@@ -1,0 +1,5 @@
+# Python forecasting libraries
+
+# Weibull-based
+https://github.com/MatthewReid854/reliability
+https://github.com/tvtoglu/predictr
