@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "weibullutils"
+version = "0.0.1"
+description = "Utilities for prepping data for weibull analysis or forecasting"
+authors = [
+  { name = "Daniel J. Kim", email = "pybokeh@protonmail.com" },
+]
+requires-python = ">=3.8"
+dependencies = [
+  "pandas>=2",
+]

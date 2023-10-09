@@ -1,0 +1,2 @@
+# Registering your Python virtual environment as an ipykernel
+https://ipython.readthedocs.io/en/stable/install/kernel_install.html#kernels-for-different-environments
