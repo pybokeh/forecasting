@@ -58,7 +58,7 @@ def add_adjusted_rank(df: pd.DataFrame, col_status: str, col_rev_rank: str):
             return "SUSPENSION"
         else:
             adjusted_rank = (series[col_rev_rank] * 1.0 * prev_adj_rank[-1] + (len(df) + 1))/(series[col_rev_rank] + 1)
-            prev_adj_rank.append(adjusted_rank)
+            prev_adj_rank[0] = adjusted_rank
             return adjusted_rank
 
     df = df.assign(adjusted_rank=df.apply(adj_rank, axis=1))
@@ -112,7 +112,7 @@ def add_median_ranks(df: pd.DataFrame, col_failure: str, col_status: str):
             return "SUSPENSION"
         else:
             adjusted_rank = (series['reverse_rank'] * 1.0 * prev_adj_rank[-1] + (len(df) + 1)) / (series['reverse_rank'] + 1)
-            prev_adj_rank.append(adjusted_rank)
+            prev_adj_rank[0] = adjusted_rank
             return adjusted_rank
 
     def median_rank(series):
