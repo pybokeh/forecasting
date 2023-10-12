@@ -109,23 +109,23 @@ def add_median_ranks(df: pd.DataFrame, col_failure: str, col_status: str):
 
     def adj_rank(series):
         if series[col_status] == "SUSPENDED":
-            return "SUSPENSION"
+            return "SUSPENDED"
         else:
             adjusted_rank = (series['reverse_rank'] * 1.0 * prev_adj_rank[-1] + (len(df) + 1)) / (series['reverse_rank'] + 1)
             prev_adj_rank[0] = adjusted_rank
             return adjusted_rank
 
     def median_rank(series):
-        if series['adjusted_rank'] == "SUSPENSION":
+        if series['adjusted_rank'] == "SUSPENDED":
             return None
         else:
             median_rank = (series['adjusted_rank'] - 0.3) / (len(df) + 0.4)
             return median_rank
 
-    return (
-        df.sort_values(by=col_failure)
-        .assign(rank=range(1, len(df)+1))
-        .assign(reverse_rank=range(len(df), 0, -1))
-        .assign(adjusted_rank=df.apply(adj_rank, axis=1))
-        .assign(median_rank=df.apply(median_rank, axis=1))
-    )
+    df.sort_values(by=col_failure, inplace=True)
+    df = df.assign(rank=range(1, len(df)+1))
+    df = df.assign(reverse_rank=range(len(df), 0, -1))
+    df = df.assign(adjusted_rank=df.apply(adj_rank, axis=1))
+    df = df.assign(median_rank=df.apply(median_rank, axis=1))
+
+    return df
