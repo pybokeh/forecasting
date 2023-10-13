@@ -122,10 +122,10 @@ def add_median_ranks(df: pd.DataFrame, col_failure: str, col_status: str):
             median_rank = (series['adjusted_rank'] - 0.3) / (len(df) + 0.4)
             return median_rank
 
-    df.sort_values(by=col_failure, inplace=True)
     df = df.assign(rank=range(1, len(df)+1))
     df = df.assign(reverse_rank=range(len(df), 0, -1))
     df = df.assign(adjusted_rank=df.apply(adj_rank, axis=1))
+    df.sort_values(by=col_failure, inplace=True)
     df = df.assign(median_rank=df.apply(median_rank, axis=1))
 
     return df
