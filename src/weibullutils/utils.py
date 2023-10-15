@@ -219,3 +219,59 @@ def weibull_cdf_table(shape: float, scale: float) -> pd.DataFrame:
     df = pd.DataFrame({'x': x_cdf, 'cdf': y_cdf})
 
     return df
+
+
+def weibull_mle_params(data: pd.DataFrame, col_failure_time: str, col_status: str):
+    """
+    Provides the MLE estimates for Weibull shape and scale parameter.
+    Newton-Raphson method was used to calculate the shape parameter
+    since the equation to obtain it does not have a closed form.
+    The following equation was used to solve for shape parameter:
+    $\lambda=\left(\sum\limits_{i=1}^n \frac{(x_i)^k}{r}\right)^\frac{1}{k}$
+    where x represents failure times for all data including suspensions and r is failure times of failed units only
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        pandas dataframe containing failure tiimes and status: failed vs suspended
+    col_failure_time : str
+        Name of column containing failure times
+    col_status : str
+        Name of column containing the status of each unit: "FAILED", "failed", "SUSPENDED", or "suspended"
+
+    Returns
+    -------
+    shape : float
+        Weibull shape parameter
+    scale : float
+        Weibull scale parameter
+    df_k : pd.DataFrame
+        pandas dataframe containing the k values that converged to the final k value used as the Weibull shape parameter
+    """
+
+    # To use MLE equations to obtain the shape parameter,
+    # we need to obtain all data and data for just the failed units only
+    data_all = data[col_failure_time].values
+    data_failed = data[(data[col_status]=='FAILED') | (data[col_status]=='failed')][col_failure_time].values
+
+    # Initial shape parameter value
+    shape = (((6.0/np.pi**2) * (np.sum(ln(data_all)**2) - ((np.sum(ln(data_all)))**2) / data_all.size)) / (data_all.size-1))**-0.5
+
+    k_values_list = []
+    for i in range(1,11):
+        A = np.sum(ln(data_failed) * 1.0) / data_failed.size
+        B = np.sum(data_all**shape)
+        C = np.sum( (data_all**shape) * ln(data_all) )
+        H = np.sum( (data_all**shape) * (ln(data_all))**2 )
+        shape = shape + (A+(1.0/shape) - (C/B)) / ((1.0/shape**2) + ( (B*H)-C**2 ) / B**2)
+        k_values_list.append(shape)
+
+    df_k = pd.DataFrame(data=k_values_list, columns=['k'])
+    df_k = df_k.assign(k_diff=df_k['k'].diff())
+
+    # Final k value to use is the first one that is very close to zero
+    k_final = df_k[(df_k["k_diff"] <= 0.0000000001)][0:1]['k'].tolist()[0]
+
+    scale = (np.sum((data_all**k_final) / data_failed.size))**(1/k_final)
+
+    return shape, scale, df_k

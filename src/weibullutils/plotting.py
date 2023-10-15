@@ -235,3 +235,50 @@ def plot_weibull_cdf_mrr(
     plt.grid()
     plt.tight_layout()
     plt.show()
+
+
+def plot_weibull_cdf(
+    shape: float,
+    scale: float,
+    title: str = "Weibull CDF",
+    xlabel: str = "x (time)",
+    ylabel: str = "Cumulative Distribution Function",
+):
+    """
+    Generates Weibull CDF plot
+
+    Parameters
+    ----------
+    shape : float
+        Weibull shape parameter
+    scale : float
+        Weibull scale parameter
+    title : str
+        title for plot
+    xlabel : str
+        x-axis label for plot
+    ylabel : str
+        y-axis label for plot
+
+    Returns
+    -------
+    Plot of Weibull CDF
+    """
+
+    x_max = scale * 3
+    x_cdf = np.arange(0,x_max)
+    # Equation for 2-parameter Weibull CDF
+    y_cdf = 1-np.exp(-(x_cdf/scale)**shape)
+
+    fig, ax = plt.subplots(figsize=(8,6))
+    ax.spines[['right', 'top']].set_visible(False)
+
+    plt.plot(x_cdf,y_cdf, label=f"shape(k)={shape:.5G}\nscale(λ)={scale:.5G}")
+
+    plt.title("Weibull CDF",weight='bold')
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.legend(loc='lower right')
+    plt.grid()
+    plt.tight_layout()
+    plt.show()
