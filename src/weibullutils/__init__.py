@@ -28,8 +28,14 @@ from .utils import (
     add_adjusted_rank,
     add_median_rank,
     add_median_ranks,
+    weibull_params_linreg,
+    weibull_cdf_table,
 )
-from .plotting import plot_weibull_cdf_mrr, plot_weibull_cdf_log_mrr
+from .plotting import (
+    plot_weibull_cdf_mrr,
+    plot_weibull_cdf_log_mrr,
+    plot_weibull_linreg,
+)
 
 __all__ = [
     'add_rank',
@@ -37,6 +43,8 @@ __all__ = [
     'add_adjusted_rank',
     'add_median_rank',
     'add_median_ranks',
-    'plot_weibull_cdf_log_mrr',
+    'weibull_params_linreg',
+    'plot_weibull_linreg',
     'plot_weibull_cdf_mrr',
+    'plot_weibull_cdf_log_mrr',
 ]
