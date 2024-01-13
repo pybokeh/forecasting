@@ -1,2 +1,14 @@
 # Registering your Python virtual environment as an ipykernel
 https://ipython.readthedocs.io/en/stable/install/kernel_install.html#kernels-for-different-environments
+
+# Python reliability forecasting libaries
+https://github.com/MatthewReid854/reliability
+https://github.com/tvtoglu/predictr
+
+# Python time series libraries
+https://github.com/Nixtla/statsforecast
+
+# YouTube Videos on Weibull failure forecasting
+Weibull linear regression plot using Excel: https://www.youtube.com/watch?v=qnUrQ-MRXkE
+Weibull MLE using Excel: https://www.youtube.com/watch?v=TYcTVdPYgM4
+NOTE: This is MRR Y on X, not X on Y: https://pardusconsulting.com/articles/perform-a-weibull-analysis-in-excel
