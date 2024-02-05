@@ -104,7 +104,7 @@ def add_median_ranks(data: pd.DataFrame, col_failure_time: str, col_status: str)
     data : pd.DataFrame
         pandas DataFrame
     col_failure_time: str
-        Column containing failure times: days to failures, miles to failure, etc
+        Column containing failure times: days to failures, miles to failure, etc.
     col_status: str
         Column containing status of each unit: Valid values are FAILED or SUSPENDED
     """
@@ -112,13 +112,13 @@ def add_median_ranks(data: pd.DataFrame, col_failure_time: str, col_status: str)
     prev_adj_rank = [0]
 
     def col_status_check(status: str) -> bool:
-        if all(data[status].isin(['failed','suspended','FAILED', 'SUSPENDED'])):
+        if all(data[status].isin(['failed', 'suspended', 'FAILED', 'SUSPENDED'])):
             return True
         else:
             return False
 
     def adj_ranks(series):
-        if series[col_status] in("suspended", "SUSPENDED"):
+        if series[col_status] in ("suspended", "SUSPENDED"):
             return None
         else:
             adjusted_rank = (series['reverse_rank'] * 1.0 * prev_adj_rank[-1] + (len(data) + 1)) / (series['reverse_rank'] + 1)
@@ -126,7 +126,7 @@ def add_median_ranks(data: pd.DataFrame, col_failure_time: str, col_status: str)
             return adjusted_rank
 
     def median_ranks(series):
-        if series['adjusted_rank'] in("suspended", "SUSPENDED"):
+        if series['adjusted_rank'] in ("suspended", "SUSPENDED"):
             return None
         else:
             median_rank = (series['adjusted_rank'] - 0.3) / (len(data) + 0.4)
@@ -155,8 +155,7 @@ def weibull_params_linreg(
     col_median_rank: str,
 ):
     """
-    Generates plot of failure times and the linear regression line.
-    Also returns the R squared value and the Weibull parameters (shape, scale)
+    Calculates the Weibull parameters (shape, scale) based on linear regression and provides R-squared value
 
     Parameters
     ----------
@@ -207,11 +206,11 @@ def weibull_cdf_table(shape: float, scale: float) -> pd.DataFrame:
     shape : float
         Weibull shape parameter
     scale : float
-        Weibull scale paramter
+        Weibull scale parameter
     """
 
     x_max = scale * 3
-    x_cdf = np.arange(0,x_max)
+    x_cdf = np.arange(0, x_max)
     # Equation for 2-parameter Weibull CDF
     y_cdf = 1-np.exp(-(x_cdf/scale)**shape)
 
@@ -233,7 +232,7 @@ def weibull_mle_params(data: pd.DataFrame, col_failure_time: str, col_status: st
     Parameters
     ----------
     data : pd.DataFrame
-        pandas dataframe containing failure tiimes and status: failed vs suspended
+        pandas dataframe containing failure times and status: failed vs suspended
     col_failure_time : str
         Name of column containing failure times
     col_status : str
@@ -252,18 +251,18 @@ def weibull_mle_params(data: pd.DataFrame, col_failure_time: str, col_status: st
     # To use MLE equations to obtain the shape parameter,
     # we need to obtain all data and data for just the failed units only
     data_all = data[col_failure_time].values
-    data_failed = data[(data[col_status]=='FAILED') | (data[col_status]=='failed')][col_failure_time].values
+    data_failed = data[(data[col_status] == 'FAILED') | (data[col_status] == 'failed')][col_failure_time].values
 
     # Initial shape parameter value
     shape = (((6.0/np.pi**2) * (np.sum(ln(data_all)**2) - ((np.sum(ln(data_all)))**2) / data_all.size)) / (data_all.size-1))**-0.5
 
     k_values_list = []
-    for i in range(1,11):
+    for i in range(1, 11):
         A = np.sum(ln(data_failed) * 1.0) / data_failed.size
         B = np.sum(data_all**shape)
-        C = np.sum( (data_all**shape) * ln(data_all) )
-        H = np.sum( (data_all**shape) * (ln(data_all))**2 )
-        shape = shape + (A+(1.0/shape) - (C/B)) / ((1.0/shape**2) + ( (B*H)-C**2 ) / B**2)
+        C = np.sum((data_all**shape) * ln(data_all))
+        H = np.sum((data_all**shape) * (ln(data_all))**2)
+        shape = shape + (A+(1.0/shape) - (C/B)) / ((1.0/shape**2) + ((B*H)-C**2) / B**2)
         k_values_list.append(shape)
 
     df_k = pd.DataFrame(data=k_values_list, columns=['k'])

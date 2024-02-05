@@ -31,9 +31,9 @@ def plot_weibull_linreg(
     title : str
         plot title
     xlabel : str
-        x axis label
+        x-axis label
     ylabel : str
-        y axis label
+        y-axis label
 
     Returns
     -------
@@ -66,7 +66,7 @@ def plot_weibull_linreg(
     scale = math.exp(-x_intercept / slope)
 
     # Create the plot using the 'ax' object instead of plt object so that the plot doesn't immediately render
-    fig, ax = plt.subplots(figsize=(8,6))
+    fig, ax = plt.subplots(figsize=(8, 6))
     ax.spines[['right', 'top']].set_visible(False)
 
     plt.scatter(x, y)
@@ -134,11 +134,11 @@ def plot_weibull_cdf_log_mrr(
     # we think ideally fits our data using the shape and scale parameter
     x_ideal = scale * random.weibull(shape, size=100)
     x_ideal.sort()
-    F = 1 - np.exp( -(x_ideal/scale)**shape )
+    F = 1 - np.exp(-(x_ideal/scale)**shape)
     y_ideal = ln(-ln(1 - F))
 
     # Set up figure
-    fig, ax = plt.subplots(figsize=(8,6))
+    fig, ax = plt.subplots(figsize=(8, 6))
     ax.spines[['right', 'top']].set_visible(False)
 
     # Create Weibull plot with log scale for both x and y-axis
@@ -150,7 +150,7 @@ def plot_weibull_cdf_log_mrr(
     plt.legend(loc='lower right')
 
     # Generate ticks
-    def weibull_cdf(y, pos):
+    def weibull_cdf(y):
         return "%G %%" % (100*(1-np.exp(-np.exp(y))))
 
     # Format y-axis
@@ -158,9 +158,7 @@ def plot_weibull_cdf_log_mrr(
     ax.yaxis.set_major_formatter(formatter)
 
     yt_f = np.array(
-        [0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5,
-         0.6, 0.7, 0.8, 0.9, 0.95, 0.99
-        ]
+        [0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.99]
     )
 
     yt_lnf = ln(-ln(1-yt_f))
@@ -209,14 +207,14 @@ def plot_weibull_cdf_mrr(
     """
 
     x_max = scale * 3
-    x_cdf = np.arange(0,x_max)
+    x_cdf = np.arange(0, x_max)
     # Equation for 2-parameter Weibull CDF
     y_cdf = 1-np.exp(-(x_cdf/scale)**shape)
 
-    fig, ax = plt.subplots(figsize=(8,6))
+    fig, ax = plt.subplots(figsize=(8, 6))
     ax.spines[['right', 'top']].set_visible(False)
 
-    plt.plot(x_cdf,y_cdf, label=f"shape(k)={shape:.5G}\nscale(λ)={scale:.5G}")
+    plt.plot(x_cdf, y_cdf, label=f"shape(k)={shape:.5G}\nscale(λ)={scale:.5G}")
 
     # Try to access the specified columns
     try:
@@ -228,7 +226,7 @@ def plot_weibull_cdf_mrr(
         print(f"KeyError: {e} - The specified column does not exist in the DataFrame.")
         return
 
-    plt.title("Weibull CDF",weight='bold')
+    plt.title(title, weight='bold')
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.legend(loc='lower right')
@@ -266,16 +264,16 @@ def plot_weibull_cdf(
     """
 
     x_max = scale * 3
-    x_cdf = np.arange(0,x_max)
+    x_cdf = np.arange(0, x_max)
     # Equation for 2-parameter Weibull CDF
     y_cdf = 1-np.exp(-(x_cdf/scale)**shape)
 
-    fig, ax = plt.subplots(figsize=(8,6))
+    fig, ax = plt.subplots(figsize=(8, 6))
     ax.spines[['right', 'top']].set_visible(False)
 
-    plt.plot(x_cdf,y_cdf, label=f"shape(k)={shape:.5G}\nscale(λ)={scale:.5G}")
+    plt.plot(x_cdf, y_cdf, label=f"shape(k)={shape:.5G}\nscale(λ)={scale:.5G}")
 
-    plt.title("Weibull CDF",weight='bold')
+    plt.title(title, weight='bold')
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.legend(loc='lower right')
